@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>From. 최민수</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; text-align: center; margin-top: 100px; }
+        h1 { color: #ff69b4; }
+        input { padding: 10px; font-size: 16px; }
+        button { padding: 10px 20px; font-size: 16px; background-color: #ff69b4; color: white; border: none; cursor: pointer; }
+        .error { color: red; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>💖 사랑하는 OO에게 💖</h1>
+    <p>세상에서 가장 소중한 당신의 이름을 입력해주세요.</p>
+
+    <form method="POST">
+        <input type="text" name="name" placeholder="당신의 이름은?" required>
+        <button type="submit">입력</button>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+</body>
+</html>

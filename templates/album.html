@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}우리의 앨범{% endblock %}
+
+{% block content %}
+    <h1>우리의 추억 앨범</h1>
+
+    <form class="upload-form" action="{{ url_for('upload_file') }}" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" accept="image/*" required>
+      <button type="submit">💖 추억 올리기</button>
+    </form>
+
+    <hr class="divider">
+
+    <div class="photo-grid">
+      {% if photos %}
+        {% for photo in photos %}
+          <div class="photo-item" data-src="{{ url_for('static', filename='images/' + photo) }}">
+            <img src="{{ url_for('static', filename='images/' + photo) }}" alt="추억 사진">
+            <form class="delete-form" action="{{ url_for('delete_photo', filename=photo) }}" method="post" onsubmit="return confirm('정말 이 사진을 삭제할까요?');">
+              <button type="submit" class="delete-btn">×</button>
+            </form>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="empty-album">아직 앨범이 비어있어요. 첫 번째 추억을 올려주세요!</p>
+      {% endif %}
+    </div>
+
+    {% if total_pages > 1 %}
+      <div class="pagination">
+        {% if page > 1 %}<a href="{{ url_for('album', page=page-1) }}" class="nav-arrow">← 이전</a>{% else %}<span class="nav-arrow disabled">← 이전</span>{% endif %}
+        <span class="page-info">페이지 {{ page }} / {{ total_pages }}</span>
+        {% if page < total_pages %}<a href="{{ url_for('album', page=page+1) }}" class="nav-arrow">다음 →</a>{% else %}<span class="nav-arrow disabled">다음 →</span>{% endif %}
+      </div>
+    {% endif %}
+
+    <div id="lightbox" class="lightbox-overlay">
+        <button id="lightbox-close" class="lightbox-btn lightbox-close">&times;</button>
+        <button id="lightbox-prev" class="lightbox-btn lightbox-prev">‹</button>
+        <div class="lightbox-content">
+            <img id="lightbox-image" src="" alt="확대된 사진" class="lightbox-image">
+        </div>
+        <button id="lightbox-next" class="lightbox-btn lightbox-next">›</button>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImage = document.getElementById('lightbox-image');
+        const photoItems = document.querySelectorAll('.photo-item');
+        const photoSources = Array.from(photoItems).map(item => item.dataset.src);
+        let currentIndex = 0;
+
+        function showLightbox(index) {
+            currentIndex = index;
+            lightboxImage.src = photoSources[currentIndex];
+            lightbox.classList.add('show');
+            updateButtons();
+        }
+
+        function hideLightbox() {
+            lightbox.classList.remove('show');
+        }
+
+        function showNext() {
+            if (currentIndex < photoSources.length - 1) {
+                showLightbox(currentIndex + 1);
+            }
+        }
+
+        function showPrev() {
+            if (currentIndex > 0) {
+                showLightbox(currentIndex - 1);
+            }
+        }
+        
+        function updateButtons() {
+            document.getElementById('lightbox-prev').style.display = (currentIndex === 0) ? 'none' : 'block';
+            document.getElementById('lightbox-next').style.display = (currentIndex === photoSources.length - 1) ? 'none' : 'block';
+        }
+
+        photoItems.forEach((item, index) => {
+            item.addEventListener('click', (e) => {
+                // 삭제 버튼 클릭 시에는 라이트박스가 열리지 않도록 함
+                if (e.target.classList.contains('delete-btn')) return;
+                showLightbox(index);
+            });
+        });
+
+        document.getElementById('lightbox-close').addEventListener('click', hideLightbox);
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) { // 이미지 바깥의 검은 배경 클릭 시 닫기
+                hideLightbox();
+            }
+        });
+        document.getElementById('lightbox-next').addEventListener('click', showNext);
+        document.getElementById('lightbox-prev').addEventListener('click', showPrev);
+
+        // 키보드 화살표로 사진 넘기기
+        document.addEventListener('keydown', (e) => {
+            if (lightbox.classList.contains('show')) {
+                if (e.key === 'ArrowRight') showNext();
+                if (e.key === 'ArrowLeft') showPrev();
+                if (e.key === 'Escape') hideLightbox();
+            }
+        });
+    });
+</script>
+{% endblock %}

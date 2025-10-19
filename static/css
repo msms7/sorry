@@ -1,0 +1,87 @@
+/* -- 구글 웹 폰트 불러오기 -- */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+/* -- 기본 스타일 -- */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    color: #5c5c5c;
+    background: linear-gradient(135deg, #fff1f5 0%, #fde8f0 100%);
+
+    /* 모든 콘텐츠를 화면 정중앙에 배치하는 핵심 코드 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* -- 모든 콘텐츠를 감싸는 중앙 카드 -- */
+.card {
+    background-color: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 800px;
+    padding: 50px 60px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 16px 40px rgba(189, 127, 150, 0.15);
+    text-align: center;
+}
+
+/* -- 중앙 네비게이션 메뉴 -- */
+.navbar {
+    margin-bottom: 40px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: center;
+    gap: 45px; /* 메뉴 사이 간격을 더 넓힘 */
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #777;
+    /* ✨ 요청하신 대로 글자 크기를 대폭 키웠습니다 ✨ */
+    font-size: 22px;
+    font-weight: 500;
+    padding: 10px 20px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.navbar a:hover {
+    background-color: rgba(230, 115, 159, 0.1);
+    color: #d85c88;
+}
+
+/* -- 콘텐츠 제목 및 본문 -- */
+.main-content h1 {
+    font-size: 40px;
+    font-weight: 700;
+    color: #d85c88;
+    margin-bottom: 20px;
+}
+
+.main-content p {
+    font-size: 18px;
+    line-height: 1.8;
+}
+/* ✨ 스마트폰 화면 대응 (반응형) 디자인 ✨ */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .card { padding: 20px; }
+            .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .main-content h1 { font-size: 32px; }
+            .navbar a { font-size: 18px; gap: 20px; }
+
+            /* ▼▼▼▼▼ 이 부분을 추가해줘! ▼▼▼▼▼ */
+
+            /* 스마트폰에서는 삭제 버튼이 항상 보이도록 수정 */
+            .delete-btn {
+                opacity: 1; /* 항상 보이게! */
+                background-color: rgba(0, 0, 0, 0.6); /* 배경을 살짝 진하게 */
+                width: 32px;  /* 버튼을 조금 키워서 누르기 쉽게 */
+                height: 32px;
+                line-height: 32px;
+            }
+        }
